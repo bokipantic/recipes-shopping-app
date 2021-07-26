@@ -2,6 +2,8 @@
     <div class="col-xs-10">
         <app-shopping-list-edit></app-shopping-list-edit>
         <hr>
+        <h4>Ingredients to buy:</h4>
+        <p *ngIf="!ingredients.length">No ingredients added</p>
         <ul class="list-group">
             <a class="list-group-item" 
                 *ngFor="let ingredient of ingredients; let i = index"

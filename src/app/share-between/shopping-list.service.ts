@@ -7,11 +7,7 @@ import { Ingredient } from '../models/ingredient-model';
   providedIn: 'root'
 })
 export class ShoppingListService {
-  private ingredients: Ingredient[] = [
-    new Ingredient('Potatoes', 5),
-    new Ingredient('Plums', 15)
-  ];
-
+  private ingredients: Ingredient[] = [];
   ingredientsChanged = new Subject<Ingredient[]>();
   startEditing = new Subject<number>();
 
@@ -26,7 +22,12 @@ export class ShoppingListService {
   }
 
   addIngredient(ingredient: Ingredient) {
-    this.ingredients.push(ingredient);
+    if (!this.ingredients.length || (this.ingredients.length && !this.ingredients.find(i => i.name === ingredient.name))) {
+      this.ingredients.push(ingredient);
+    } else {
+      const existedIngr = this.ingredients.find(i => i.name === ingredient.name);
+      existedIngr.amount = +existedIngr.amount + +ingredient.amount;
+    }
     this.ingredientsChanged.next(this.ingredients.slice());
   }
 
@@ -41,7 +42,14 @@ export class ShoppingListService {
   }
 
   addToShoppingList(ingredients: Ingredient[]) {
-    this.ingredients.push(...ingredients);
+    for (const ingredient of ingredients) {
+      if (this.ingredients.length && this.ingredients.find(value => value.name === ingredient.name)) {
+        const existedIngr = this.ingredients.find(i => i.name === ingredient.name);
+        existedIngr.amount = +existedIngr.amount + +ingredient.amount;
+      } else {
+        this.ingredients.push(ingredient);
+      }
+    }
     this.ingredientsChanged.next(this.ingredients.slice());
   }
 
