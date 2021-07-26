@@ -37,8 +37,11 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   onDeleteRecipe() {
-    this.recService.deleteRecipe(this.id);
-    this.router.navigate(['/']);
+    if (confirm('Are you sure you want to delete this recipe?')) {
+      this.recService.deleteRecipe(this.id);
+      this.dataStorageService.saveRecipes();
+      this.router.navigate(['/']);     
+    }
   }
 
 }

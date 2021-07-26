@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { DataStorageService } from '../share-between/data-storage.service';
+// import { DataStorageService } from '../share-between/data-storage.service';
 
 @Component({
   selector: 'app-header',
@@ -10,13 +10,13 @@ import { DataStorageService } from '../share-between/data-storage.service';
 export class HeaderComponent implements OnInit {
   collapsed: Boolean;
 
-  constructor(private dataStorageService: DataStorageService) { }
+  // constructor(private dataStorageService: DataStorageService) { }
 
   ngOnInit(): void {
   }
 
-  onSaveRecipes() {
-    this.dataStorageService.saveRecipes();
-  }
+  // onSaveRecipes() {
+  //   this.dataStorageService.saveRecipes();
+  // }
 
 }
