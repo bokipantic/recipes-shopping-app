@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map, tap } from 'rxjs/operators';
 
 import { RecipesService } from './recipes.service';
-import { Recipe } from '../models/recipe-model';
+import { Recipe } from '../models/recipe.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class DataStorageService {
 
   saveRecipes() {
     const recipes = this.recipeService.getRecipes();
-    // overwrite database every time
+    // overwrite entire database every time
     this.http.put<Recipe[]>('https://recipe-book-c2e98-default-rtdb.firebaseio.com/recipes.json', recipes)
       .subscribe(response => console.log(response));
   }
@@ -31,6 +31,7 @@ export class DataStorageService {
           });
         }),
         tap(recipes => this.recipeService.setRecipes(recipes))
-      )
+      );
   }
+
 }
