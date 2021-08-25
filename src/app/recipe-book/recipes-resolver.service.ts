@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 
 import { Recipe } from '../models/recipe.model';
-import { DataStorageService } from './data-storage.service';
+import { DataStorageService } from '../share-between/data-storage.service';
 import { RecipesService } from './recipes.service';
 
 @Injectable({

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
-import { RecipesService } from 'src/app/share-between/recipes.service';
+import { RecipesService } from 'src/app/recipe-book/recipes.service';
 import { DataStorageService } from 'src/app/share-between/data-storage.service';
 
 @Component({

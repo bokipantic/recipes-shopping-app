@@ -5,10 +5,10 @@ import { RecipeDetailComponent } from './recipe-book/recipe-detail/recipe-detail
 import { RecipeEditComponent } from './recipe-book/recipe-edit/recipe-edit.component';
 import { RecipeListComponent } from './recipe-book/recipe-list/recipe-list.component';
 import { RecipeStartComponent } from './recipe-book/recipe-start/recipe-start.component';
-import { RecipesResolverService } from './share-between/recipes-resolver.service';
+import { RecipesResolverService } from './recipe-book/recipes-resolver.service';
 import { ShoppingListComponent } from './shopping-list/shopping-list/shopping-list.component';
-import { AuthComponent } from './auth/auth.component';
-import { AuthGuardService } from './share-between/auth-guard.service';
+import { AuthComponent } from './auth/auth/auth.component';
+import { AuthGuardService } from './auth/auth-guard.service';
 
 const routes: Routes = [
   { path: '', redirectTo: '/recipes', pathMatch: 'full' },
