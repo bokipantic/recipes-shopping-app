@@ -1,0 +1,40 @@
+[
+    {
+        "name": "Grilled burger",
+        "description": "Spicy",
+        "imagePath": "https://www.thespruceeats.com/thmb/5Qgdc0_UsoDNWSa3LlnYemm4AYI=/4494x2528/smart/filters:no_upscale()/juicy-grilled-burgers-3052125-hero-01-c3eb26de65cc49f7a071668f93560f65.jpg",
+        "ingredients": [
+            {
+                "name": "Minced meat",
+                "amount": 1
+            },
+            {
+                "name": "Lettuce",
+                "amount": 3
+            },
+            {
+                "name": "Onion",
+                "amount": 2
+            }
+        ]
+    },
+    {
+        "name": "Beef with potatoes",
+        "description": "Extra tasty",
+        "imagePath": "https://img.taste.com.au/pAqIqoAC/taste/2017/11/mustard-black-pepper-beef-with-roast-potatoes-taste_1980x1320-132906-1.jpg",
+        "ingredients": [
+            {
+                "name": "Beef steak",
+                "amount": 2
+            },
+            {
+                "name": "Potatoes",
+                "amount": 7
+            },
+            {
+                "name": "Tomatoes",
+                "amount": 5
+            }
+        ]
+    }
+]

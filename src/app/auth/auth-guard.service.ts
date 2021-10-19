@@ -2,20 +2,22 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 
-import { AuthService } from './auth.service';
+import * as fromAppReducer from '../store/app.reducer';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuardService implements CanActivate {
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private router: Router, private store: Store<fromAppReducer.AppState>) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    return this.authService.user.pipe(
+    return this.store.select('auth').pipe(
       take(1),
+      map(authState => authState.user),
       map(user => {
         const isAuth = !!user; // or = user ? true : false
         if (isAuth) { // if true
@@ -25,8 +27,10 @@ export class AuthGuardService implements CanActivate {
       })
 
       // // Another solution:
+
       // take(1),
-      // map(user => !!user), // or => user ? true : false
+      // map(authState => authState.user),
+      // map(user => !!user),
       // tap(isAuth => {
       //   if (!isAuth) { // if false
       //     this.router.navigate(['/auth']);

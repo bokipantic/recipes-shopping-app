@@ -1,23 +1,38 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Actions, ofType } from '@ngrx/effects';
+import { of } from 'rxjs';
+import { map, switchMap, take } from 'rxjs/operators';
 
 import { Recipe } from '../models/recipe.model';
-import { DataStorageService } from '../share-between/data-storage.service';
-import { RecipesService } from './recipes.service';
+import * as fromAppReducer from '../store/app.reducer';
+import * as fromRecipeActions from './store/recipe.actions';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RecipesResolverService implements Resolve<Recipe[]> {
 
-  constructor(private recipeService: RecipesService, private dataStorageService: DataStorageService) { }
-  // if user reloads page /recipes/id
+  constructor(
+    private store: Store<fromAppReducer.AppState>, 
+    private actions$: Actions) { }
+
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const recipes = this.recipeService.getRecipes();
-    if (recipes.length === 0) {
-      return this.dataStorageService.fetchRecipes(); // resolve method subscribe automatically
-    } else {
-      return recipes;
-    }
+    return this.store.select('recipes').pipe(
+      take(1),
+      map(recipesState => recipesState.recipes),
+      switchMap(recipes => {
+        if (recipes.length === 0) {
+          this.store.dispatch(new fromRecipeActions.FetchRecipes());
+          return this.actions$.pipe(
+            ofType(fromRecipeActions.SET_RECIPES),
+            take(1)
+          );
+        } else {
+          return of(recipes);
+        }
+      })
+    );
   }
 }

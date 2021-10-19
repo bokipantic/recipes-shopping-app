@@ -12,12 +12,15 @@ import { AuthGuardService } from './auth/auth-guard.service';
 
 const routes: Routes = [
   { path: '', redirectTo: '/recipes', pathMatch: 'full' },
-  { path: 'recipes', component: RecipeListComponent, canActivate: [AuthGuardService], children: [
-    { path: '', component: RecipeStartComponent },
-    { path: 'new', component: RecipeEditComponent },
-    { path: ':id', component: RecipeDetailComponent, resolve: [RecipesResolverService] },
-    { path: ':id/edit', component: RecipeEditComponent, resolve: [RecipesResolverService] }
-  ] },
+  {
+    path: 'recipes', component: RecipeListComponent, canActivate: [AuthGuardService], resolve: [RecipesResolverService],
+    children: [
+      { path: '', component: RecipeStartComponent },
+      { path: 'new', component: RecipeEditComponent },
+      { path: ':id', component: RecipeDetailComponent, resolve: [RecipesResolverService] },
+      { path: ':id/edit', component: RecipeEditComponent, resolve: [RecipesResolverService] }
+    ]
+  },
   { path: 'shopping-list', component: ShoppingListComponent, canActivate: [AuthGuardService] },
   { path: 'auth', component: AuthComponent }
 ];
