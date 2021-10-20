@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { ShoppingListEditComponent } from './shopping-list-edit/shopping-list-edit.component';
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { SharedModule } from '../share-between/shared.module';
+import { AuthGuardService } from '../auth/auth-guard.service';
 
 @NgModule({
   declarations: [
@@ -12,7 +14,10 @@ import { SharedModule } from '../share-between/shared.module';
   ],
   imports: [
     FormsModule,
-    SharedModule
+    SharedModule,
+    RouterModule.forChild([
+      { path: '', component: ShoppingListComponent, canActivate: [AuthGuardService] }
+    ])
   ]
 })
-export class ShoppingModule { }
+export class ShoppingListModule { }

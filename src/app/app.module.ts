@@ -6,18 +6,15 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 
+import * as fromAppReducer from './store/app.reducer';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
-import { RecipesModule } from './recipe-book/recipes.module';
-import { ShoppingModule } from './shopping-list/shopping.module';
 import { SharedModule } from './share-between/shared.module';
-import { AuthModule } from './auth/auth.module';
-import * as fromAppReducer from './store/app.reducer';
 import { AuthEffects } from './auth/store/auth.effects';
-import { environment } from 'src/environments/environment';
 import { RecipeEffects } from './recipe-book/store/recipe.effects';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -32,10 +29,7 @@ import { RecipeEffects } from './recipe-book/store/recipe.effects';
     EffectsModule.forRoot([AuthEffects, RecipeEffects]),
     StoreDevtoolsModule.instrument({ logOnly: environment.production }),
     StoreRouterConnectingModule.forRoot(),
-    RecipesModule,
-    ShoppingModule,
-    SharedModule,
-    AuthModule
+    SharedModule
   ],
   providers: [
     {
