@@ -25,9 +25,10 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
     this.editSubcription = this.store.select('shoppingList')
       .subscribe(stateData => {
         this.ingredients = stateData.ingredients;
-        if (stateData.editedIngredientIndex > -1) {
+        const editIndex = stateData.editedIngredientIndex;
+        if (editIndex > -1) {
           this.editMode = true;
-          this.editedIngredient = stateData.editedIngredient;
+          this.editedIngredient = stateData.ingredients[editIndex];
           this.slForm.setValue({
             name: this.editedIngredient.name,
             amount: this.editedIngredient.amount
