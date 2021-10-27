@@ -1,3 +1,5 @@
+import { Action, createReducer, on } from "@ngrx/store";
+
 import { User } from "src/app/models/user.model";
 import * as fromAuthActions from "./auth.actions";
 
@@ -13,14 +15,25 @@ const initialState: State = {
     loading: false
 };
 
-export function authReducer(state: State = initialState, action: fromAuthActions.AuthActions) {
-    switch (action.type) {
-        case fromAuthActions.AUTH_SUCCESS:
+const _authReducer = createReducer(
+    initialState,
+    on(
+        fromAuthActions.loginStart,
+        fromAuthActions.signupStart,
+        state => ({
+            ...state,
+            authError: null,
+            loading: true
+        })
+    ),
+    on(
+        fromAuthActions.authSuccess,
+        (state, action) => {
             const user = new User(
-                action.payload.email,
-                action.payload.userId,
-                action.payload.token,
-                action.payload.tokenExpirationDate
+                action.email,
+                action.userId,
+                action.token,
+                action.tokenExpirationDate
             );
             return {
                 ...state,
@@ -28,32 +41,33 @@ export function authReducer(state: State = initialState, action: fromAuthActions
                 authError: null,
                 loading: false
             };
-        case fromAuthActions.LOGOUT:
-            return {
-                ...state,
-                user: null
-            };
-        case fromAuthActions.LOGIN_START:
-        case fromAuthActions.SIGNUP_START:
-            return {
-                ...state,
-                authError: null,
-                loading: true
-            };
-        case fromAuthActions.AUTH_FAIL:
-            return {
-                ...state,
-                user: null,
-                authError: action.payload,
-                loading: false
-            };
-        case fromAuthActions.CLEAR_ERROR:
-            return {
-                ...state,
-                authError: null
-            };
-        default:
-            return state;
-    }
+        }
+    ),
+    on(
+        fromAuthActions.logout,
+        state => ({
+            ...state,
+            user: null
+        })
+    ),
+    on(
+        fromAuthActions.authFail,
+        (state, action) => ({
+            ...state,
+            user: null,
+            authError: action.errorMessage,
+            loading: false
+        })
+    ),
+    on(
+        fromAuthActions.clearError,
+        state => ({
+            ...state,
+            authError: null
+        })
+    )
+);
 
+export function authReducer(state: State, action: Action) {
+    return _authReducer(state, action);
 }

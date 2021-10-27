@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 import { Recipe } from 'src/app/models/recipe.model';
-import { Ingredient } from 'src/app/models/ingredient.model';
 import * as fromShoppingListActions from 'src/app/shopping-list/store/shopping-list.actions';
 import * as fromAppReducer from 'src/app/store/app.reducer';
 import * as fromRecipeActions from '../store/recipe.actions';
@@ -19,7 +18,6 @@ import * as fromRecipeReducer from '../store/recipe.reducer';
 export class RecipeDetailComponent implements OnInit {
   recipeSelected: Recipe;
   id: number;
-  private ingredients: Ingredient[];
 
   constructor(
     private route: ActivatedRoute,
@@ -38,27 +36,18 @@ export class RecipeDetailComponent implements OnInit {
         map((recipesState: fromRecipeReducer.State): Recipe => recipesState.recipes[this.id])
       )
       .subscribe((recipe: Recipe) => this.recipeSelected = recipe);
-
-    this.store.select('shoppingList').subscribe(
-      stateData => this.ingredients = stateData.ingredients
-    );
   }
 
   onAddToShoppingList() {
     this.recipeSelected.ingredients.forEach(ingredient => {
-      if (!this.ingredients.length || !this.ingredients.find(i => i.name === ingredient.name)) {
-        this.store.dispatch(new fromShoppingListActions.AddIngredient(ingredient));
-      } else {
-        const index = this.ingredients.findIndex(i => i.name === ingredient.name);
-        this.store.dispatch(new fromShoppingListActions.AddExistingIngredient({ index: index, addedIngredient: ingredient }));
-      }
+      this.store.dispatch(fromShoppingListActions.addIngredient({ ingredient: ingredient }));
     });
   }
 
   onDeleteRecipe() {
     if (confirm('Are you sure you want to delete this recipe?')) {
-      this.store.dispatch(new fromRecipeActions.DeleteRecipe(this.id));
-      this.store.dispatch(new fromRecipeActions.SaveRecipes());
+      this.store.dispatch(fromRecipeActions.deleteRecipe({ index: this.id }));
+      this.store.dispatch(fromRecipeActions.saveRecipes());
       this.router.navigate(['/']);
     }
   }

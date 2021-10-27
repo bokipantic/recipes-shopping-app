@@ -22,7 +22,7 @@ const handleAuth = (email: string, userId: string, token: string, expiresIn: num
     const tokenExpirationDate = new Date(new Date().getTime() + expiresIn * 1000);
     const user = new User(email, userId, token, tokenExpirationDate);
     localStorage.setItem('userData', JSON.stringify(user));
-    return new fromAuthActions.AuthSuccess({
+    return fromAuthActions.authSuccess({
         email: email,
         userId: userId,
         token: token,
@@ -33,9 +33,9 @@ const handleAuth = (email: string, userId: string, token: string, expiresIn: num
 
 const handleError = (errorRes: any) => {
     if (!errorRes.error || !errorRes.error.error) {
-        return of(new fromAuthActions.AuthFail('An unknown error occured!'));
+        return of(fromAuthActions.authFail({ errorMessage: 'An unknown error occured!' }));
     }
-    return of(new fromAuthActions.AuthFail(errorRes.error.error.message));
+    return of(fromAuthActions.authFail({ errorMessage: errorRes.error.error.message }));
 };
 
 @Injectable()
@@ -49,11 +49,11 @@ export class AuthEffects {
 
     authSignup$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(fromAuthActions.SIGNUP_START),
-            switchMap((signupAction: fromAuthActions.SignupStart) => {
+            ofType(fromAuthActions.signupStart),
+            switchMap(action => {
                 const newUser = {
-                    email: signupAction.payload.email,
-                    password: signupAction.payload.password,
+                    email: action.email,
+                    password: action.password,
                     returnSecureToken: true
                 };
                 return this.http.post<AuthResponse>(
@@ -73,11 +73,11 @@ export class AuthEffects {
 
     authLogin$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(fromAuthActions.LOGIN_START),
-            switchMap((loginAction: fromAuthActions.LoginStart) => {
+            ofType(fromAuthActions.loginStart),
+            switchMap(action => {
                 const user = {
-                    email: loginAction.payload.email,
-                    password: loginAction.payload.password,
+                    email: action.email,
+                    password: action.password,
                     returnSecureToken: true
                 };
                 return this.http.post<AuthResponse>(
@@ -97,9 +97,9 @@ export class AuthEffects {
 
     authRedirect$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(fromAuthActions.AUTH_SUCCESS),
-            tap((authSuccessAction: fromAuthActions.AuthSuccess) => {
-                if (authSuccessAction.payload.redirect) {
+            ofType(fromAuthActions.authSuccess),
+            tap(action => {
+                if (action.redirect) {
                     this.router.navigate(['/']);
                 }
             })
@@ -108,7 +108,7 @@ export class AuthEffects {
 
     authAutoLogin$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(fromAuthActions.AUTO_LOGIN),
+            ofType(fromAuthActions.autoLogin),
             map(() => {
                 const userData: {
                     email: string,
@@ -130,7 +130,7 @@ export class AuthEffects {
                 if (loggedInUser.token) {
                     const expirationDuration = new Date(userData._tokenExpirationDate).getTime() - new Date().getTime();
                     this.authService.setLogoutTimer(expirationDuration);
-                    return new fromAuthActions.AuthSuccess({
+                    return fromAuthActions.authSuccess({
                         email: loggedInUser.email,
                         userId: loggedInUser.userId,
                         token: loggedInUser.token,
@@ -145,7 +145,7 @@ export class AuthEffects {
 
     authLogout$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(fromAuthActions.LOGOUT),
+            ofType(fromAuthActions.logout),
             tap(() => {
                 this.authService.clearLogoutTimer();
                 localStorage.removeItem('userData');

@@ -96,14 +96,14 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
   onAddOrEditRecipe() {
     if (this.editMode) {
-      this.store.dispatch(new fromRecipeActions.EditRecipe({
+      this.store.dispatch(fromRecipeActions.editRecipe({
         index: this.id,
         editedRecipe: this.recipeForm.value
       }));
     } else {
-      this.store.dispatch(new fromRecipeActions.AddRecipe(this.recipeForm.value));
+      this.store.dispatch(fromRecipeActions.addRecipe({ recipe: this.recipeForm.value }));
     }
-    this.store.dispatch(new fromRecipeActions.SaveRecipes());
+    this.store.dispatch(fromRecipeActions.saveRecipes());
     this.router.navigate(['../'], { relativeTo: this.route });
   }
 }

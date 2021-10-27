@@ -18,7 +18,7 @@ export class RecipeEffects {
 
   fetchRecipes$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(fromRecipeActions.FETCH_RECIPES),
+      ofType(fromRecipeActions.fetchRecipes),
       switchMap(() => {
         return this.http.get<Recipe[]>('https://recipe-book-c2e98-default-rtdb.firebaseio.com/recipes.json')
       }),
@@ -30,18 +30,18 @@ export class RecipeEffects {
           };
         });
       }),
-      map(recipes => new fromRecipeActions.SetRecipes(recipes))
+      map(recipes => fromRecipeActions.setRecipes({ recipes: recipes }))
     );
   });
 
   saveRecipes$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(fromRecipeActions.SAVE_RECIPES),
+      ofType(fromRecipeActions.saveRecipes),
       withLatestFrom(this.store.select('recipes')),
       switchMap(([actionData, recipesState]) => {
         return this.http.put<Recipe[]>
           ('https://recipe-book-c2e98-default-rtdb.firebaseio.com/recipes.json', recipesState.recipes)
       })
     );
-  }, {dispatch: false});
+  }, { dispatch: false });
 }

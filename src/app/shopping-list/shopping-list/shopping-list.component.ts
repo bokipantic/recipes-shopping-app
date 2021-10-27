@@ -21,7 +21,7 @@ export class ShoppingListComponent implements OnInit {
   }
 
   onEditIngredient(index: number) {
-    this.store.dispatch(new fromShoppingListActions.StartEdit(index));
+    this.store.dispatch(fromShoppingListActions.startEdit({ index: index }));
   }
 
 }

@@ -12,10 +12,10 @@ import * as fromRecipeActions from './store/recipe.actions';
 @Injectable({
   providedIn: 'root'
 })
-export class RecipesResolverService implements Resolve<Recipe[]> {
+export class RecipesResolverService implements Resolve<{ recipes: Recipe[] }> {
 
   constructor(
-    private store: Store<fromAppReducer.AppState>, 
+    private store: Store<fromAppReducer.AppState>,
     private actions$: Actions) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
@@ -24,13 +24,13 @@ export class RecipesResolverService implements Resolve<Recipe[]> {
       map(recipesState => recipesState.recipes),
       switchMap(recipes => {
         if (recipes.length === 0) {
-          this.store.dispatch(new fromRecipeActions.FetchRecipes());
+          this.store.dispatch(fromRecipeActions.fetchRecipes());
           return this.actions$.pipe(
-            ofType(fromRecipeActions.SET_RECIPES),
+            ofType(fromRecipeActions.setRecipes),
             take(1)
           );
         } else {
-          return of(recipes);
+          return of({ recipes: recipes });
         }
       })
     );

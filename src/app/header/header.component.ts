@@ -3,7 +3,6 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { AuthService } from '../auth/auth.service';
 import * as fromAppReducer from '../store/app.reducer';
 import * as fromAuthActions from '../auth/store/auth.actions';
 
@@ -17,7 +16,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isAuthenticated: boolean = false;
   private userSubscription: Subscription;
 
-  constructor(private authService: AuthService, private store: Store<fromAppReducer.AppState>) { }
+  constructor(private store: Store<fromAppReducer.AppState>) { }
 
   ngOnInit(): void {
     this.userSubscription = this.store.select('auth').pipe(
@@ -29,7 +28,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onLogout() {
-    this.store.dispatch(new fromAuthActions.Logout());
+    this.store.dispatch(fromAuthActions.logout());
   }
 
   ngOnDestroy() {
